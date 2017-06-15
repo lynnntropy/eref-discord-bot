@@ -49,7 +49,7 @@ class HttpService
 
     fun sendToWebhook(json: String)
     {
-        val httpPost = HttpPost("https://canary.discordapp.com/api/webhooks/324982814980177920/V_Gou3Px3T0CpnaAYrsYwRSZOokH9qSYZCyYxeU2k1jdUm8mRYLhNpSrr05dH-b7Q1H8")
+        val httpPost = HttpPost(Config.jsonObject.string("webhook"))
         httpPost.entity = StringEntity(json, "application/json", "UTF-8")
         httpClient.execute(httpPost)
     }
