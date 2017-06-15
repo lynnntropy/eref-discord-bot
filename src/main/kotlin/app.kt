@@ -21,8 +21,6 @@ fun main(args: Array<String>)
         val results = eref.getResults()
         val examples = eref.getExamples()
 
-        for(item in news) println(item)
-
         if (latestNews != null)
             if (latestNews != news.first()) eref.httpService.sendToWebhook(news.first().getJson())
 
