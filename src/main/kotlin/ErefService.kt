@@ -4,6 +4,7 @@ import model.ResultItem
 
 object ErefService
 {
+    private val BASE_URL = "https://eref.vts.su.ac.rs"
     private val EBOARD_NEWS_URL = "https://eref.vts.su.ac.rs/sr/default/eboard/news/noauth/1"
     private val EBOARD_EXAMPLES_URL = "https://eref.vts.su.ac.rs/sr/default/eboard/examples/noauth/1"
     private val EBOARD_RESULTS_URL = "https://eref.vts.su.ac.rs/sr/default/eboard/results/noauth/1"
@@ -18,7 +19,7 @@ object ErefService
             val author = post.select(".professor-f").text().trim()
             val subject = post.select(".subjects-f").text().trim()
             val title = post.select(".eboard-post-title").text().trim()
-            val body = post.select(".eboard-post-content").text().trim()
+            val body = post.select(".eboard-post-content").html().trim().replace("<br>", "\n").replace("\n\n", "\n")
 
             newsItems.add(NewsItem(author, subject, title, body))
         }
@@ -35,9 +36,12 @@ object ErefService
         {
             val author = post.select(".professor-f").text().trim()
             val subject = post.select(".subjects-f").text().trim()
-            val body = post.select(".eboard-post-content").text().trim()
+            val body = post.select(".eboard-post-content").html().trim().replace("<br>", "\n").replace("\n\n", "\n")
 
-            exampleItems.add(ExampleItem(author, subject, body))
+            val link =  post.select(".eboard-post-toolbar a").firstOrNull()
+            val fileUrl = link?.let { BASE_URL + it.attr("href")}
+
+            exampleItems.add(ExampleItem(author, subject, body, fileUrl))
         }
 
         return exampleItems
@@ -53,9 +57,12 @@ object ErefService
             val author = post.select(".professor-f").text().trim()
             val subject = post.select(".subjects-f").text().trim()
             val title = post.select(".eboard-post-title").text().trim()
-            val body = post.select(".eboard-post-content").text().trim()
+            val body = post.select(".eboard-post-content").html().trim().replace("<br>", "\n").replace("\n\n", "\n")
 
-            resultItems.add(ResultItem(author, subject, title, body))
+            val link =  post.select(".eboard-post-toolbar a").firstOrNull()
+            val fileUrl = link?.let { BASE_URL + it.attr("href")}
+
+            resultItems.add(ResultItem(author, subject, title, body, fileUrl))
         }
 
         return resultItems
