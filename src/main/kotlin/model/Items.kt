@@ -16,7 +16,7 @@ data class NewsItem(
                     JsonObject(mapOf(
                             "title" to title,
                             "description" to "**Vest** - Postavio/la **$author** u predmet **$subject**\n\n$body",
-                            "color" to 0x2196F3
+                            "color" to 0x8BC34A
                     )))))
         }
 
@@ -57,7 +57,7 @@ data class ExampleItem(
                     JsonObject(mapOf(
                             "title" to "Kliše za: $subject",
                             "description" to "**Kliše** - Postavio/la **$author**\n\n$body",
-                            "color" to 0x8BC34A
+                            "color" to 0x2196F3
                     )))))
         }
 
