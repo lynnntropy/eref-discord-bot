@@ -15,7 +15,8 @@ data class NewsItem(
             obj(Pair("embeds", array(
                     JsonObject(mapOf(
                             "title" to title,
-                            "description" to "**Vest** - Postavio/la **$author** u predmet **$subject**\n\n$body"
+                            "description" to "**Vest** - Postavio/la **$author** u predmet **$subject**\n\n$body",
+                            "color" to 0x2196F3
                     )))))
         }
 
@@ -35,7 +36,8 @@ data class ResultItem(
             obj(Pair("embeds", array(
                     JsonObject(mapOf(
                             "title" to title,
-                            "description" to "**Rezultati** - Postavio/la **$author** u predmet **$subject**\n\n$body"
+                            "description" to "**Rezultati** - Postavio/la **$author** u predmet **$subject**\n\n$body",
+                            "color" to 0xFF5722
                     )))))
         }
 
@@ -54,7 +56,8 @@ data class ExampleItem(
             obj(Pair("embeds", array(
                     JsonObject(mapOf(
                             "title" to "Kliše za: $subject",
-                            "description" to "**Kliše** - Postavio/la **$author**\n\n$body"
+                            "description" to "**Kliše** - Postavio/la **$author**\n\n$body",
+                            "color" to 0x8BC34A
                     )))))
         }
 
