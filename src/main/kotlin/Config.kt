@@ -1,10 +1,8 @@
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 
-class Config
+object Config
 {
-    companion object {
-        val jsonObject = Parser().parse(fileName = "config.json") as JsonObject
-    }
+    val values = Parser().parse(fileName = "config.json") as JsonObject
 }
 

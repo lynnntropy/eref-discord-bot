@@ -7,28 +7,40 @@ fun main(args: Array<String>)
 {
     println("-- EREF Discord Bot started. --")
 
-    val eref = ErefService()
-
     var latestNews: NewsItem? = null
     var latestResults: ResultItem? = null
     var latestExample: ExampleItem? = null
 
     fixedRateTimer(period = 60000)
     {
-        println("Running loop.")
+        Logger.log("Running loop...")
 
-        val news = eref.getNews()
-        val results = eref.getResults()
-        val examples = eref.getExamples()
+        val news = ErefService.getNews()
+        val results = ErefService.getResults()
+        val examples = ErefService.getExamples()
 
-        if (latestNews != null)
-            if (latestNews != news.first()) eref.httpService.sendToWebhook(news.first().getJson())
+        Logger.log("Fetched: ${news.size} news, ${results.size} results, ${examples.size} examples.")
 
-        if (latestResults != null)
-            if (latestResults != results.first()) eref.httpService.sendToWebhook(results.first().getJson())
+        if (latestNews != null && latestNews != news.first())
+        {
+            HttpService.sendToWebhook(news.first().getJson())
+            Logger.log("Old: $latestNews")
+            Logger.log("New: ${news.first()}")
+        }
 
-        if (latestExample != null)
-            if (latestExample != examples.first()) eref.httpService.sendToWebhook(examples.first().getJson())
+        if (latestResults != null && latestResults != results.first())
+        {
+            HttpService.sendToWebhook(results.first().getJson())
+            Logger.log("Old: $latestResults")
+            Logger.log("New: ${results.first()}")
+        }
+
+        if (latestExample != null && latestExample != examples.first())
+        {
+            HttpService.sendToWebhook(examples.first().getJson())
+            Logger.log("Old: $latestExample")
+            Logger.log("New: ${examples.first()}")
+        }
 
         latestNews = news.first()
         latestResults = results.first()

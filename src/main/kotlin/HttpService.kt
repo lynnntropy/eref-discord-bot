@@ -14,7 +14,7 @@ import org.apache.http.ssl.SSLContextBuilder
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
-class HttpService
+object HttpService
 {
     private val httpClient = createHttpClient()
 
@@ -33,7 +33,7 @@ class HttpService
     {
         val cookieStore = BasicCookieStore()
 
-        val cookie = BasicClientCookie("eref_session", Config.jsonObject.string("eref_session"))
+        val cookie = BasicClientCookie("eref_session", Config.values.string("eref_session"))
         cookie.domain = "eref.vts.su.ac.rs"
         cookie.path = "/"
         cookieStore.addCookie(cookie)
@@ -49,7 +49,7 @@ class HttpService
 
     fun sendToWebhook(json: String)
     {
-        val httpPost = HttpPost(Config.jsonObject.string("webhook"))
+        val httpPost = HttpPost(Config.values.string("webhook"))
         httpPost.entity = StringEntity(json, "application/json", "UTF-8")
         httpClient.execute(httpPost)
     }
