@@ -14,14 +14,21 @@ object HttpService
         builder.loadTrustMaterial(null) { chain, authType -> true }
 
         FuelManager.instance.socketFactory = builder.build().socketFactory
-        FuelManager.instance.baseHeaders = mapOf(
-                "Cookie" to "eref_session=${Config.values.string("eref_session")}",
-                "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:43.0) Gecko/20100101 Firefox/43.0")
+        FuelManager.instance.baseHeaders = mapOf("User-Agent" to "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:43.0) Gecko/20100101 Firefox/43.0")
     }
 
     fun fetchDocument(url: String): Document
     {
         val (request, response, result) = url.httpGet().responseString()
+        return Jsoup.parse(result.get())
+    }
+
+    fun fetchDocumentWithSession(url: String): Document
+    {
+        val (request, response, result) = url.httpGet()
+                .header(Pair("Cookie", "eref_session=${Config.values.string("eref_session")}"))
+                .responseString()
+
         return Jsoup.parse(result.get())
     }
 

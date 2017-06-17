@@ -1,13 +1,18 @@
+import com.beust.klaxon.array
 import model.ExampleItem
 import model.NewsItem
 import model.ResultItem
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 object ErefService
 {
     private val BASE_URL = "https://eref.vts.su.ac.rs"
-    private val EBOARD_NEWS_URL = "https://eref.vts.su.ac.rs/sr/default/eboard/news/noauth/1"
-    private val EBOARD_EXAMPLES_URL = "https://eref.vts.su.ac.rs/sr/default/eboard/examples/noauth/1"
-    private val EBOARD_RESULTS_URL = "https://eref.vts.su.ac.rs/sr/default/eboard/results/noauth/1"
+    private val EBOARD_NEWS_URL = "$BASE_URL/sr/default/eboard/news/noauth/1"
+    private val EBOARD_EXAMPLES_URL = "$BASE_URL/sr/default/eboard/examples/noauth/1"
+    private val EBOARD_RESULTS_URL = "$BASE_URL/sr/default/eboard/results/noauth/1"
 
     fun getNews(): List<NewsItem>
     {
@@ -21,7 +26,10 @@ object ErefService
             val title = post.select(".eboard-post-title").text().trim()
             val body = post.select(".eboard-post-content").html().trim().replace("<br>", "\n").replace("\n\n", "\n")
 
-            newsItems.add(NewsItem(author, subject, title, body))
+            val dateTime = getPostDateTime(post.html())
+
+            if (subject in Config.values.array<String>("subjects")!!)
+                newsItems.add(NewsItem(dateTime, author, subject, title, body))
         }
 
         return newsItems
@@ -41,7 +49,10 @@ object ErefService
             val link =  post.select(".eboard-post-toolbar a").firstOrNull()
             val fileUrl = link?.let { BASE_URL + it.attr("href")}
 
-            exampleItems.add(ExampleItem(author, subject, body, fileUrl))
+            val dateTime = getPostDateTime(post.html())
+
+            if (subject in Config.values.array<String>("subjects")!!)
+                exampleItems.add(ExampleItem(dateTime, author, subject, body, fileUrl))
         }
 
         return exampleItems
@@ -62,9 +73,20 @@ object ErefService
             val link =  post.select(".eboard-post-toolbar a").firstOrNull()
             val fileUrl = link?.let { BASE_URL + it.attr("href")}
 
-            resultItems.add(ResultItem(author, subject, title, body, fileUrl))
+            val dateTime = getPostDateTime(post.html())
+
+            if (subject in Config.values.array<String>("subjects")!!)
+                resultItems.add(ResultItem(dateTime, author, subject, title, body, fileUrl))
         }
 
         return resultItems
+    }
+
+    private fun getPostDateTime(postHtml: String): LocalDateTime
+    {
+        val matcher = Pattern.compile("Datum i vreme: (.*)").matcher(postHtml)
+        matcher.find()
+
+        return LocalDateTime.parse(matcher.group(1).trim(), DateTimeFormatter.ofPattern("dd.MM.yyyy. HH.mm.ss"))
     }
 }

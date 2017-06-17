@@ -2,8 +2,10 @@ package model
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.json
+import java.time.LocalDateTime
 
 data class NewsItem(
+        val dateTime: LocalDateTime,
         val author: String,
         val subject: String,
         val title: String,
@@ -25,6 +27,7 @@ data class NewsItem(
 }
 
 data class ResultItem(
+        val dateTime: LocalDateTime,
         val author: String,
         val subject: String,
         val title: String,
@@ -50,6 +53,7 @@ data class ResultItem(
 }
 
 data class ExampleItem(
+        val dateTime: LocalDateTime,
         val author: String,
         val subject: String,
         val body: String,
