@@ -4,7 +4,6 @@ import model.NewsItem
 import model.ResultItem
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 object ErefService
@@ -84,9 +83,8 @@ object ErefService
 
     private fun getPostDateTime(postHtml: String): LocalDateTime
     {
-        val matcher = Pattern.compile("Datum i vreme: (.*)").matcher(postHtml)
-        matcher.find()
-
-        return LocalDateTime.parse(matcher.group(1).trim(), DateTimeFormatter.ofPattern("dd.MM.yyyy. HH.mm.ss"))
+        return LocalDateTime.parse(
+                Regex("Datum i vreme: (.*)").find(postHtml)!!.groupValues[1],
+                DateTimeFormatter.ofPattern("dd.MM.yyyy. HH.mm.ss"))
     }
 }

@@ -11,10 +11,6 @@ fun main(args: Array<String>)
     var latestResults: ResultItem? = null
     var latestExample: ExampleItem? = null
 
-//    val news = ErefService.getNews()
-//    val results = ErefService.getResults()
-//    val examples = ErefService.getExamples()
-
     fixedRateTimer(period = 60000)
     {
         try

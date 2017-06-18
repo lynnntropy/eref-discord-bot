@@ -17,11 +17,7 @@ object HttpService
         FuelManager.instance.baseHeaders = mapOf("User-Agent" to "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:43.0) Gecko/20100101 Firefox/43.0")
     }
 
-    fun fetchDocument(url: String): Document
-    {
-        val (request, response, result) = url.httpGet().responseString()
-        return Jsoup.parse(result.get())
-    }
+    fun fetchDocument(url: String): Document = Jsoup.parse(url.httpGet().responseString().third.get())
 
     fun fetchDocumentWithSession(url: String): Document
     {
