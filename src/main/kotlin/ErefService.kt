@@ -4,7 +4,6 @@ import model.NewsItem
 import model.ResultItem
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.regex.Pattern
 
 object ErefService
 {
@@ -21,13 +20,13 @@ object ErefService
         for (post in document.select(".eboard-post"))
         {
             val author = post.select(".professor-f").text().trim()
-            val subject = post.select(".subjects-f").text().trim()
+            val subject = post.select(".subjects-f").text().trim().lowerAndCapitalize()
             val title = post.select(".eboard-post-title").text().trim()
             val body = post.select(".eboard-post-content").html().trim().replace("<br>", "\n").replace("\n\n", "\n")
 
             val dateTime = getPostDateTime(post.html())
 
-            if (subject in Config.values.array<String>("subjects")!!)
+            if (subject.toUpperCase() in Config.values.array<String>("subjects")!!)
                 newsItems.add(NewsItem(dateTime, author, subject, title, body))
         }
 
@@ -42,7 +41,7 @@ object ErefService
         for (post in document.select(".eboard-post"))
         {
             val author = post.select(".professor-f").text().trim()
-            val subject = post.select(".subjects-f").text().trim()
+            val subject = post.select(".subjects-f").text().trim().lowerAndCapitalize()
             val body = post.select(".eboard-post-content").html().trim().replace("<br>", "\n").replace("\n\n", "\n")
 
             val link =  post.select(".eboard-post-toolbar a").firstOrNull()
@@ -50,7 +49,7 @@ object ErefService
 
             val dateTime = getPostDateTime(post.html())
 
-            if (subject in Config.values.array<String>("subjects")!!)
+            if (subject.toUpperCase() in Config.values.array<String>("subjects")!!)
                 exampleItems.add(ExampleItem(dateTime, author, subject, body, fileUrl))
         }
 
@@ -65,7 +64,7 @@ object ErefService
         for (post in document.select(".eboard-post"))
         {
             val author = post.select(".professor-f").text().trim()
-            val subject = post.select(".subjects-f").text().trim()
+            val subject = post.select(".subjects-f").text().trim().lowerAndCapitalize()
             val title = post.select(".eboard-post-title").text().trim()
             val body = post.select(".eboard-post-content").html().trim().replace("<br>", "\n").replace("\n\n", "\n")
 
@@ -74,7 +73,7 @@ object ErefService
 
             val dateTime = getPostDateTime(post.html())
 
-            if (subject in Config.values.array<String>("subjects")!!)
+            if (subject.toUpperCase() in Config.values.array<String>("subjects")!!)
                 resultItems.add(ResultItem(dateTime, author, subject, title, body, fileUrl))
         }
 
@@ -84,7 +83,7 @@ object ErefService
     private fun getPostDateTime(postHtml: String): LocalDateTime
     {
         return LocalDateTime.parse(
-                Regex("Datum i vreme: (.*)").find(postHtml)!!.groupValues[1],
+                Regex("Datum i vreme: (.*)").find(postHtml)!!.groupValues[1].trim(),
                 DateTimeFormatter.ofPattern("dd.MM.yyyy. HH.mm.ss"))
     }
 }
