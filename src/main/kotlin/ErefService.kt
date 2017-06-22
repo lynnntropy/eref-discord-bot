@@ -1,4 +1,6 @@
 import com.beust.klaxon.array
+import com.overzealous.remark.Options
+import com.overzealous.remark.Remark
 import model.ExampleItem
 import model.NewsItem
 import model.ResultItem
@@ -22,7 +24,7 @@ object ErefService
             val author = post.select(".professor-f").text().trim()
             val subject = post.select(".subjects-f").text().trim().lowerAndCapitalize()
             val title = post.select(".eboard-post-title").text().trim()
-            val body = post.select(".eboard-post-content").html().trim().replace("<br>", "\n").replace("\n\n", "\n")
+            val body = parsePostContent(post.select(".eboard-post-content").html())
 
             val dateTime = getPostDateTime(post.html())
 
@@ -42,7 +44,7 @@ object ErefService
         {
             val author = post.select(".professor-f").text().trim()
             val subject = post.select(".subjects-f").text().trim().lowerAndCapitalize()
-            val body = post.select(".eboard-post-content").html().trim().replace("<br>", "\n").replace("\n\n", "\n")
+            val body = parsePostContent(post.select(".eboard-post-content").html())
 
             val link =  post.select(".eboard-post-toolbar a").firstOrNull()
             val fileUrl = link?.let { BASE_URL + it.attr("href")}
@@ -66,7 +68,7 @@ object ErefService
             val author = post.select(".professor-f").text().trim()
             val subject = post.select(".subjects-f").text().trim().lowerAndCapitalize()
             val title = post.select(".eboard-post-title").text().trim()
-            val body = post.select(".eboard-post-content").html().trim().replace("<br>", "\n").replace("\n\n", "\n")
+            val body = parsePostContent(post.select(".eboard-post-content").html())
 
             val link =  post.select(".eboard-post-toolbar a").firstOrNull()
             val fileUrl = link?.let { BASE_URL + it.attr("href")}
@@ -81,9 +83,18 @@ object ErefService
     }
 
     private fun getPostDateTime(postHtml: String): LocalDateTime
+            = LocalDateTime.parse(
+                    Regex("Datum i vreme: (.*)").find(postHtml)!!.groupValues[1].trim(),
+                    DateTimeFormatter.ofPattern("dd.MM.yyyy. HH.mm.ss"))
+
+    private fun parsePostContent(postContentHtml: String): String
     {
-        return LocalDateTime.parse(
-                Regex("Datum i vreme: (.*)").find(postHtml)!!.groupValues[1].trim(),
-                DateTimeFormatter.ofPattern("dd.MM.yyyy. HH.mm.ss"))
+        // Use Remark to convert the HTML post body directly to Markdown.
+
+        val options = Options.markdown()
+        options.inlineLinks = true
+
+        val remark = Remark(options)
+        return remark.convertFragment(postContentHtml.trim()).trim()
     }
 }

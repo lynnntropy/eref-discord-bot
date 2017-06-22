@@ -32,4 +32,5 @@ dependencies {
     compile 'com.github.kittinunf.fuel:fuel:1.7.0'
     compile 'org.apache.commons:commons-lang3:3.6'
     compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
+    compile 'com.kotcrab.remark:remark:1.0.0'
 }
